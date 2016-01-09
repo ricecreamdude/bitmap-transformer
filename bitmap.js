@@ -9,6 +9,8 @@ console.log(`width: ${bitmap.readUInt32LE(18)}`)
 console.log(`height: ${bitmap.readUInt32LE(22)}`);
 console.log(`number of colors: ${bitmap.readUInt32LE(46)}`);
 
+
+//
 var colorArray = (function() {
 
   var toReturn = [];
@@ -25,11 +27,11 @@ var colorArray = (function() {
 //Begin loading image data into Javascript arrays, starting at byte 54 (because headers and stuff)
 //We have verified that byte 54 is indeed where the image starts - this image does NOT have a color pallete.
 
-var colorPalette = createRgb(colorArray);
+var colorPalette = createRgb(colorArray); //array
 
 for(var i = 0; i < bitmap.length; i++){
 	if(i > 54){
-		bitmap[i] = colorPalette[i];
+		bitmap[i] = colorPalette.pop();
 	}
 
   //Writes bitmap to greyscale.bmp (All data is done processing by here)
@@ -46,8 +48,9 @@ function createRgb(array) {
   for (var i = 0; i < array.length; i = i + 3) {
   	var greyScaleReturn = grayScale(array[i + 2], array[i + 1], array[i]);
     colorPallete.push(greyScaleReturn);
+    console.log(greyScaleReturn);
   }
-  return colorPallete;
+  return colorPallete;  //Array
 }
 
 //Converts an RGB set into grayscale via averaging
@@ -55,7 +58,7 @@ function createRgb(array) {
 function grayScale(r,g,b){
 	var toReturn = (r+b+g)/3;
 	toReturn = Math.floor(toReturn);
-	return toReturn;
+	return toReturn; //int
 }
 
 // Buffer is the buffer that will be written to file
